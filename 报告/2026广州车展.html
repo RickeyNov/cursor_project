@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026 广州车展</title>
+<style>
+  :root {
+    --bg: #f3efe6;
+    --paper: #faf7f2;
+    --ink: #1c1915;
+    --muted: #5e584e;
+    --line: #d9d0c2;
+    --accent: #6f2e2a;
+    --soft: #efe6d6;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "STSong", "WenQuanYi Micro Hei", "Droid Sans Fallback", serif;
+    font-size: 18px;
+    line-height: 1.75;
+  }
+  button, input, select { font: inherit; color: inherit; }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  .shell {
+    display: grid;
+    grid-template-columns: 228px minmax(0, 980px);
+    gap: 64px;
+    max-width: 1288px;
+    margin: 0 auto;
+    padding: 36px 28px 96px;
+  }
+  nav {
+    position: sticky;
+    top: 20px;
+    align-self: start;
+    max-height: calc(100vh - 40px);
+    overflow: auto;
+    font-family: "WenQuanYi Micro Hei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    padding-right: 8px;
+  }
+  nav .brand {
+    margin: 0 0 18px;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+  }
+  nav ol { list-style: none; margin: 0 0 22px; padding: 0; }
+  nav ol a {
+    color: var(--ink);
+    text-decoration: none;
+    display: block;
+    padding: 5px 0;
+    border-top: 1px solid transparent;
+  }
+  nav ol a:hover { color: var(--accent); }
+  .filters { display: grid; gap: 12px; }
+  .filters label {
+    display: grid;
+    gap: 4px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .filters input, .filters select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--ink);
+    border-radius: 0;
+    padding: 6px 0;
+    letter-spacing: 0;
+    color: var(--ink);
+  }
+  .filters button {
+    margin-top: 4px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    text-align: left;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    cursor: pointer;
+  }
+  #count { margin: 8px 0 0; color: var(--muted); }
+  .kicker {
+    font-family: "WenQuanYi Micro Hei", "PingFang SC", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    margin: 0 0 12px;
+  }
+  h1 {
+    font-size: 52px;
+    line-height: 1.15;
+    font-weight: 600;
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+  }
+  .sub { font-size: 20px; margin: 0 0 18px; }
+  .meta {
+    font-family: "WenQuanYi Micro Hei", sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--line);
+    padding: 10px 0;
+    margin-bottom: 22px;
+  }
+  .stats {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 0 0 28px;
+    padding: 0;
+  }
+  .stats li { border-top: 1px solid var(--ink); padding-top: 8px; }
+  .stats b {
+    display: block;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+  }
+  .stats span {
+    font-family: "WenQuanYi Micro Hei", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  figure { margin: 0; }
+  img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .hero { margin: 8px 0 8px; }
+  .hero img { height: auto; max-height: 620px; object-fit: cover; }
+  figcaption, .cap {
+    font-family: "WenQuanYi Micro Hei", sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  h2 {
+    font-size: 32px;
+    line-height: 1.25;
+    font-weight: 600;
+    margin: 64px 0 12px;
+  }
+  .lede { font-size: 18px; margin: 0 0 12px; }
+  .prose p { margin: 0 0 14px; }
+  article.feature {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 28px;
+    align-items: start;
+    padding: 32px 0;
+    border-top: 1px solid var(--ink);
+  }
+  article.feature.flip { grid-template-columns: 0.85fr 1.15fr; }
+  article.feature.flip .visual { order: 2; }
+  .visual img, .plate { aspect-ratio: 3 / 2; }
+  .plate {
+    background:
+      radial-gradient(900px 280px at 15% 0%, rgba(255,248,236,.16), transparent 55%),
+      linear-gradient(165deg, #3a342c 0%, #161310 72%);
+    color: #f3efe6;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px 22px;
+  }
+  .plate span {
+    font-family: "WenQuanYi Micro Hei", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    opacity: 0.72;
+  }
+  .plate strong { font-size: 34px; font-weight: 500; letter-spacing: 0.04em; }
+  .eyebrow {
+    font-family: "WenQuanYi Micro Hei", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin: 0 0 8px;
+  }
+  article h3 { font-size: 30px; line-height: 1.25; font-weight: 600; margin: 0 0 10px; }
+  article p { margin: 0 0 12px; }
+  .fine {
+    font-family: "WenQuanYi Micro Hei", sans-serif;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .warn {
+    font-family: "WenQuanYi Micro Hei", sans-serif;
+    font-size: 13px;
+    color: var(--accent);
+  }
+  dl {
+    display: grid;
+    grid-template-columns: 7.2em 1fr;
+    gap: 4px 12px;
+    margin: 14px 0 0;
+    font-size: 15px;
+  }
+  dt { color: var(--muted); }
+  dd { margin: 0; }
+  #rows { border-top: 1px solid var(--ink); }
+  article.row {
+    display: grid;
+    grid-template-columns: 132px minmax(0, 1fr);
+    gap: 18px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  article.row .visual img, article.row .plate { aspect-ratio: 4 / 3; }
+  article.row .plate strong { font-size: 18px; }
+  article.row h3 { font-size: 22px; margin-bottom: 4px; }
+  article.row .lead { font-size: 16px; margin-bottom: 6px; }
+  .halls { list-style: none; margin: 0; padding: 0; }
+  .halls li {
+    display: grid;
+    grid-template-columns: 7.5em 1fr;
+    gap: 16px;
+    padding: 10px 0;
+    border-top: 1px solid var(--line);
+    font-size: 16px;
+  }
+  .halls b { font-weight: 600; }
+  .sources { font-size: 15px; color: var(--muted); }
+  .sources li { margin: 0 0 6px; }
+  #none {
+    display: none;
+    padding: 28px 0;
+    border-top: 1px solid var(--ink);
+  }
+  section[hidden] { display: none; }
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: 1fr; gap: 28px; padding: 24px 18px 64px; }
+    nav { position: static; max-height: none; }
+    h1 { font-size: 38px; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    article.feature, article.feature.flip { grid-template-columns: 1fr; }
+    article.feature.flip .visual { order: 0; }
+    article.row { grid-template-columns: 96px 1fr; }
+    .halls li { grid-template-columns: 1fr; gap: 2px; }
+  }
+  @media print {
+    nav { display: none; }
+    .shell { display: block; max-width: none; }
+    article { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav>
+    <p class="brand">AUTO GUANGZHOU</p>
+    <ol>
+      <li><a href="#top">封面</a></li>
+      <li><a href="#read">怎么读</a></li>
+      <li><a href="#key">重点</a></li>
+      <li><a href="#list">目录</a></li>
+      <li><a href="#concept">概念与未确认</a></li>
+      <li><a href="#halls">展馆</a></li>
+      <li><a href="#sources">来源</a></li>
+    </ol>
+    <div class="filters">
+      <label>搜索<input id="q" type="search" placeholder="车名、品牌、展馆"></label>
+      <label>范围
+        <select id="f-tier">
+          <option value="all">全部</option>
+          <option value="key">重点</option>
+          <option value="list">目录</option>
+          <option value="concept">概念</option>
+        </select>
+      </label>
+      <label>动作
+        <select id="f-action">
+          <option value="all">全部</option>
+          <option>首发</option>
+          <option>首秀</option>
+          <option>上市</option>
+          <option>展出</option>
+          <option>展前已上市</option>
+          <option>概念</option>
+        </select>
+      </label>
+      <label>动力
+        <select id="f-power">
+          <option value="all">全部</option>
+          <option>纯电</option>
+          <option>插混</option>
+          <option>增程</option>
+          <option>混动</option>
+          <option>燃油</option>
+          <option>未公布</option>
+        </select>
+      </label>
+      <label>车身
+        <select id="f-body">
+          <option value="all">全部</option>
+          <option>轿车</option>
+          <option>SUV</option>
+          <option>MPV</option>
+        </select>
+      </label>
+      <label>价格
+        <select id="f-price">
+          <option value="all">全部</option>
+          <option value="na">未公布</option>
+          <option value="u15">15 万以下</option>
+          <option value="m30">15–30 万</option>
+          <option value="m50">30–50 万</option>
+          <option value="m100">50–100 万</option>
+          <option value="top">100 万以上</option>
+        </select>
+      </label>
+      <label>阵营
+        <select id="f-camp">
+          <option value="all">全部</option>
+          <option>豪华</option>
+          <option>合资</option>
+          <option>自主</option>
+          <option>新势力</option>
+        </select>
+      </label>
+      <button id="reset" type="button">清除筛选</button>
+      <p id="count"></p>
+    </div>
+  </nav>
+  <main id="top">
+    <p class="kicker">第二十四届 · 广交会展馆琶洲</p>
+    <h1>2026 广州车展</h1>
+    <p class="sub">看点、新车、概念车。写到 11 月 20 日上午能核对的公开信息为止。</p>
+    <p class="meta">11 月 27 日媒体日 · 28 日至 29 日专业观众 · 11 月 30 日至 12 月 6 日对公众开放 · 每天 9:00–17:30</p>
+    <ul class="stats">
+      <li><b>1106</b><span>展车</span></li>
+      <li><b>115</b><span>首发</span></li>
+      <li><b>707</b><span>新能源，约 63.9%</span></li>
+      <li><b>22 万</b><span>平方米，组委会口径</span></li>
+    </ul>
+    <figure class="hero">
+      <img src="images/q9-nyc.jpg" alt="深蓝色奥迪 Q9 停在纽约街道边，右侧驶过黄色出租车">
+      <figcaption>封面是奥迪 Q9 的纽约街拍，美国规格。它会在这届车展国内亮相，中国版动力还没官宣。照片：Audi AG，编辑用途。</figcaption>
+    </figure>
+
+    <section id="read">
+      <h2>这届实际在比什么</h2>
+      <div class="prose">
+        <p>车展还没开。组委会公布了 115 台首发，没有公布名单。下面不是展馆里的每一台车，是已经能对上动作、尺寸或价格的那些。蔚来、理想、小鹏在参展名单里，截至 20 日没有公布本届首发。</p>
+        <p>10 万级在把 800 伏往下放，零跑 Lafa5 是这台。15 万以内的合资插混开始配激光雷达和城市领航，日产 NX7 是这台。30 万级的家庭车在比后轮转向、空悬和激光雷达是不是全系都有，问界新 M8 和奕境 X9 是这组。百万级在比材料和仪式，鼎曜、Q9、7 系、VLE 各走一条。</p>
+        <p>宝马把两台新世代拆开了：iX3 在 11 月 25 日上市并交付，i3 在媒体日开订，明年一季度才交。首发不等于当天能买。飞行家 EX8 甚至把上市写到了 2027 年上半年。</p>
+        <p>概念车几乎没有公开目录。叫得出名字的原型车只有本田冠道，而且官方还没确认。有预告说固态电池量产车会集中亮相，但没有点名是哪一台。广汽在 2025 年的发布是中试线投产、目标 2026 年装车，那不是这届已经交付的车。产业链展区只开到 11 月 30 日。</p>
+        <p>价格筛“15–30 万”这类档时，跨越两档的车两边都会出现。只写了“起”的，按门槛归到那一档。预售价不是指导价。</p>
+      </div>
+    </section>
+
+    <p id="none">没有符合这些条件的车。</p>
+    <section id="key">
+      <h2>重点</h2>
+      <p class="lede">单独展开。没有实拍的，留下一块深色名字，不用别的车来顶。</p>
+      <div id="key-list"></div>
+    </section>
+    <section id="list">
+      <h2>目录</h2>
+      <p class="lede">不展开。尺寸和价格用小字。没有公开的，写未公布。</p>
+      <div id="list-list"></div>
+    </section>
+    <section id="concept">
+      <h2>概念与未确认</h2>
+      <p class="lede">只收叫得出名字、又不能当成量产首发的。确认不了的，标题上就写未确认。</p>
+      <div id="concept-list"></div>
+    </section>
+
+    <section id="halls">
+      <h2>展馆</h2>
+      <p class="lede">11 月 19 日公布的乘用车展位。启境同时出现在 2.2 和 5.2，阿维塔同时出现在 4.2 和 5.2，按原表保留。</p>
+      <ol class="halls">
+        <li><b>1.1</b><span>极石、吉利银河、212、雷克萨斯、保时捷、大众（上汽大众、一汽-大众、大众安徽）</span></li>
+        <li><b>2.1</b><span>比亚迪集团：腾势、方程豹、仰望、比亚迪，以及闪充、天神之眼、比亚迪芯片</span></li>
+        <li><b>2.2</b><span>广汽集团、广汽本田、广汽丰田、昊铂埃安、启境、传祺</span></li>
+        <li><b>3.1</b><span>一汽奥迪、福特、捷途、捷途纵横、奇瑞（风云、QQ、星途）</span></li>
+        <li><b>3.2</b><span>一汽丰田、荣威、名爵、大通、东风本田、林肯</span></li>
+        <li><b>4.1</b><span>长城、沃尔沃、iCAR、宝马、MINI</span></li>
+        <li><b>4.2</b><span>问界、奕派、江汽、深蓝、长安、阿维塔</span></li>
+        <li><b>5.1</b><span>奔驰、富古、凯迪拉克、现代、北汽（享界、极狐、北京越野）</span></li>
+        <li><b>5.2</b><span>华为乾崑、启境、神行者、阿维塔、奕境、猛士</span></li>
+        <li><b>17.2</b><span>蔚来、乐道、萤火虫、小米、上汽奥迪、尚界、小鹏。小米展位 17202</span></li>
+        <li><b>18.2</b><span>长安马自达、别克、零跑、鸿蒙智行</span></li>
+        <li><b>19.2</b><span>红旗（天工、金葵花）、东风日产、理想</span></li>
+        <li><b>20.2</b><span>领克、极氪、智界、岚图、智己</span></li>
+      </ol>
+    </section>
+
+    <section id="sources">
+      <h2>来源和照片</h2>
+      <ul class="sources">
+        <li>展期、台数、主题：广州车展组委会新闻稿，2026-11-17；官网日程。</li>
+        <li>展馆：凤凰网 / 易车，2026-11-19，转组委会展位图。</li>
+        <li>重点新车参数：汽车之家，2026-11-17，《奥迪 Q9 / 新款航海家 / 全新汉 / 仰望鼎曜领衔》。</li>
+        <li>奔驰阵容：盖世汽车，2026-11-19，转奔驰星闻。星铂版 4+2 座见凤凰网同日快报。</li>
+        <li>宝马 i3 / iX3 / 7 系 / MINI：宝马参展说明，汽车之家与财经网。</li>
+        <li>问界新 M8：汽车之家上市稿，2026-11-13。</li>
+        <li>腾势 N8：上市稿，2026-11-12 前后，雷峰网与新浪转述。</li>
+        <li>魏牌二代蓝山：魏牌官网；预售消息见新华网，2026-11-10。</li>
+        <li>星越 L PLUS：吉利官网预售价页。</li>
+        <li>享界 V8：预售区间与尺寸见盖世、凤凰网，2026-11-19。上市时间 11 月 20 日 14:30。本稿写于发布会之前。</li>
+        <li>小米参展：小米汽车，2026-11-19。澎程 N70 的价格和电池见小米汽车官网。</li>
+        <li>红旗 H9 PHEV 只出现在新浪新车日历的 11 月 27 日，没有第二来源。</li>
+        <li>照片只收能对上这台车的。奥迪 Q9 纽约街拍为 Audi AG 官方图片，编辑使用。其余来自 Wikimedia Commons，图注里写了作者和许可。改过的图、展车和中国售价版不是同一台的，图注里写了。</li>
+      </ul>
+    </section>
+  </main>
+</div>
+<script id="data" type="application/json">[{"id": "dingyao", "tier": "key", "name": "仰望鼎曜", "brand": "仰望", "camp": "自主", "action": "首发", "power": ["纯电"], "body": "轿车", "priceMin": 208, "priceMax": 208, "price": "山河鼎韵限量版预选价 208 万", "size": "尺寸未公布", "hall": "2.1 馆", "lead": "大型旗舰轿车，11 月 27 日第一次公开亮相。格栅用 137 颗宝石，每颗 51 个刻面；车标是 24K 金甲骨文。对开门接近 90 度。208 万只是山河鼎韵限量版的预选价，不是全系指导价。", "specs": [["续航", "第二代刀片电池，CLTC 超过 1000 公里"], ["补能", "10%–70% 约 5 分钟，10%–97% 约 9 分钟"], ["智驾", "首搭比亚迪璇玑 A3，4 纳米；瞭望塔式激光雷达"], ["座椅", "副驾礼宾座，靠背 117°、座垫 18°，样本 200 余人"], ["其他", "高速爆胎时四轮独立扭矩矢量"]], "note": "没有可用的实拍。不用 U7、U8 的照片顶替。", "certainty": "已公开", "img": "", "alt": "", "cap": ""}, {"id": "q9", "tier": "key", "name": "奥迪 Q9", "brand": "奥迪", "camp": "豪华", "action": "首秀", "power": ["未公布"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "中国售价未公布", "size": "5310 × 2010 × 1810 mm，轴距 3140", "hall": "奥迪展台", "img": "images/q9-nyc.jpg", "alt": "深蓝色奥迪 Q9 停在纽约街道边，旁边驶过一辆黄色出租车", "cap": "纽约街拍，美国规格。中国版动力还没官宣。照片：Audi AG。", "lead": "全尺寸 SUV，国内这次是亮相，不是全球首发。6 座或 7 座，电动门，最大 23 英寸轮圈，B&O 音响 1360 瓦、22 个扬声器。一汽奥迪在 3.1 馆，上汽奥迪在 17.2 馆，Q9 落在哪一馆没有单独说明。中国卖哪套动力没有官宣。有消息称可能是 3.0T 轻混，367 马力、550 牛·米，这组不能当成定论。", "specs": [["座舱", "12.3 英寸仪表 + 14.5 英寸中控，可选 12.3 英寸副驾屏"], ["天窗", "可开启全景玻璃超过 1.5 平方米"], ["美国汽油版", "2.9T 双涡轮 V6，435 马力、600 牛·米，8AT、quattro"], ["底盘", "美国版后轮转向最大 5°，自适应空气悬架"]], "certainty": "已公开", "note": ""}, {"id": "i3", "tier": "key", "name": "宝马 i3 长轴距版", "brand": "宝马", "camp": "豪华", "action": "上市", "power": ["纯电"], "body": "轿车", "priceMin": null, "priceMax": null, "price": "11 月 27 日公布全国统一价，数字未出", "size": "4864 × 1865 × 1490 mm，轴距 3005", "hall": "4.1 馆", "img": "images/i3.jpg", "alt": "白色宝马 i3 停在展台上，车头是发光的双肾格栅", "cap": "海外展车，不是中国长轴距版。中国版有半隐藏式门把手。照片：M 93，CC BY-SA 3.0 de。", "lead": "媒体日上市并开启订购。2027 年 1 月国内投产，一季度交付。800 伏，第六代 eDrive，单电机 235 千瓦。汽车之家写的加速是 0–100 公里/小时 4.7 秒，最高时速 200 公里/小时。", "specs": [["电池", "108 千瓦时宁德时代三元锂"], ["续航", "首发版 CLTC 906 公里，普通版最高 912 公里"], ["空间", "前备厢 31 升，后备厢 420 升"], ["座舱", "17.9 英寸中控，43.3 英寸视平线显示"], ["智驾", "与 Momenta 联合开发"]], "certainty": "已公开", "note": ""}, {"id": "bmw7", "tier": "key", "name": "新款宝马 7 系", "brand": "宝马", "camp": "豪华", "action": "首秀", "power": ["燃油"], "body": "轿车", "priceMin": null, "priceMax": null, "price": "本届不重新公布售价", "size": "5391 × 1950 × 1548 mm，轴距 3215", "hall": "4.1 馆", "lead": "中期改款，本届看的是内饰和双质感涂装，不是一台新车。车漆超过 500 种，上亮下哑的双质感涂装，一台要做 4500 分钟以上。全景 iDrive 接了宝马和阿里的 AI 引擎，并支持鸿蒙。", "specs": [["屏幕", "43 英寸视平线屏、17.9 英寸中控、14.62 英寸副驾屏"], ["后排", "躺角 42.5°，腿托行程约 110 mm；31 英寸 8K 屏"], ["音响", "B&W Diamond 4D，36 个扬声器，1925 瓦"], ["动力", "第四代 B58 3.0T，200 千瓦或 280 千瓦"]], "note": "改款实拍还没公开。现款车尾不能说明这次的前脸和内饰，所以不放图。", "certainty": "已公开", "img": "", "alt": "", "cap": ""}, {"id": "tz", "tier": "key", "name": "雷克萨斯 TZ", "brand": "雷克萨斯", "camp": "豪华", "action": "首发", "power": ["纯电"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "未公布", "size": "5100 × 1990 × 1705 mm，轴距 3050", "hall": "1.1 馆", "img": "images/tz-ext.jpg", "alt": "白色雷克萨斯 TZ 停在木色展厅里，封闭前脸，闪电形灯组", "cap": "展厅实车。海外另有 76.96 千瓦时版本，中国预告写的是下面这组。照片：TTTNIS，CC0。", "lead": "纯电三排 SUV。封闭前脸，纺锤形被压扁。座椅 2+2+3，第二排零重力。声浪取样自 LFA 的 V10。", "specs": [["动力", "双电机四驱，综合 300 千瓦，0–100 公里/小时 5.4 秒"], ["电池", "95.82 千瓦时，CLTC 640 公里，10%–80% 约 35 分钟"], ["其他", "后轮转向，牵引质量 1500 公斤，外放电"], ["座舱", "高配是中控与副驾联屏；21 扬声器"]], "certainty": "已公开", "note": ""}, {"id": "vle", "tier": "key", "name": "奔驰 VLE", "brand": "奔驰", "camp": "豪华", "action": "首秀", "power": ["纯电"], "body": "MPV", "priceMin": null, "priceMax": null, "price": "未公布", "size": "未公布", "hall": "5.1 馆", "img": "images/vle.jpg", "alt": "黑色奔驰 VLE 停在车展台子上，尾门打开，车头是竖向格栅", "cap": "2026 年 9 月汉诺威车展的 VLE 300。广州是中国首秀。照片：MB-one，CC BY-SA 4.0。", "lead": "奔驰新 MPV 架构的第一台车，中国首秀。公开稿只说到豪华轿车的舒适和 MPV 的装载，尺寸、续航、价格都还没有。同台上市的纯电 GLC、智混 CLA 和 G 400 在目录里。", "specs": [["动作", "中国首秀，不是上市"], ["智驾", "Momenta R7 已装在纯电 GLC、纯电 CLA 上，做到车位到车位"], ["座舱", "中国团队主导的 AI 座舱同期亮相"]], "certainty": "已公开", "note": ""}, {"id": "han", "tier": "key", "name": "全新比亚迪汉", "brand": "比亚迪", "camp": "自主", "action": "首发", "power": ["纯电", "插混"], "body": "轿车", "priceMin": null, "priceMax": null, "price": "未公布", "size": "5156 × 1969 × 1507 mm，另一高度 1492，轴距 3030", "hall": "2.1 馆", "lead": "比现款汉长 161 毫米、宽 59 毫米，轴距多 110 毫米。比汉 L 大，比大汉短 100 毫米。贯穿式前灯，汉字标识，车顶激光雷达，尾灯仍是中国结。动力来自申报，不是配置表。", "specs": [["纯电", "245 千瓦或 300 千瓦后驱；520 千瓦四驱"], ["插混", "1.5T，驱动电机 200 千瓦"], ["外观", "半隐藏式门把手，溜背"]], "note": "新车还没有可核对的实拍。现款汉的照片对不上这组尺寸，不放。", "certainty": "已公开", "img": "", "alt": "", "cap": ""}, {"id": "nx7", "tier": "key", "name": "东风日产 NX7", "brand": "日产", "camp": "合资", "action": "上市", "power": ["插混"], "body": "SUV", "priceMin": 12.99, "priceMax": 14.99, "price": "预售 12.99 万–14.99 万", "size": "4785 × 1920 × 1660 mm，轴距 2815", "hall": "19.2 馆", "lead": "五座插混 SUV，车展上市。车长卡在紧凑和中型的交界，汽车之家按中型写。看点是 15 万以内给了车顶激光雷达和城市 NOA。", "specs": [["动力", "1.5 升发动机 73 千瓦，驱动电机 170 千瓦"], ["电池", "宁德时代 40.9 千瓦时"], ["续航", "CLTC 纯电 320 公里，综合 1666 公里"], ["智驾", "Momenta R7，支持城市 NOA"], ["座舱", "骁龙 8295P，17.3 英寸 3K 屏，55 英寸 AR-HUD"], ["后备厢", "783 升，放倒后最大 1878 升"]], "certainty": "已公开", "note": "", "img": "", "alt": "", "cap": ""}, {"id": "x9", "tier": "key", "name": "奕境 X9 纯电版", "brand": "奕境", "camp": "自主", "action": "首发", "power": ["纯电"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "纯电价未公布。增程版限时价 27.98 万–35.98 万", "size": "5301 × 2015 × 1820 mm，轴距 3120", "hall": "5.2 馆", "lead": "六座大型 SUV，和增程版同一尺寸、同一外观。首发，有望在媒体日上市。座舱和灯语的数字目前是参照增程版。", "specs": [["动力", "单电机 300 千瓦；双电机 150+300 千瓦，综合 450 千瓦"], ["电池", "磷酸铁锂，容量未在前瞻里写出"], ["智驾", "乾崑 ADS 5，四颗激光雷达，含一颗 896 线"], ["底盘", "双腔空气悬架，后轮双向 14°"], ["座椅", "2+2+2"]], "certainty": "已公开", "note": "", "img": "", "alt": "", "cap": ""}, {"id": "m8", "tier": "key", "name": "问界新 M8", "brand": "问界", "camp": "新势力", "action": "展前已上市", "power": ["纯电", "增程"], "body": "SUV", "priceMin": 37.98, "priceMax": 46.98, "price": "37.98 万–46.98 万，11 月 13 日上市", "size": "尺寸未在上市稿中单列", "hall": "4.2 馆", "img": "images/m8.jpg", "alt": "深红色问界 M8 的车尾停在车展展台，牌照框写着问界 M8", "cap": "改款前的车尾。新款改了车色和轮毂，轮廓仍是这台车。照片：JustAnotherCarDesigner，CC0。", "lead": "不是本届首发，11 月 13 日已经上市，展台会有。增程和纯电、五座和六座都在这个价带里。这次把智驾硬件放进了全系，而不是高配才有。", "specs": [["智驾", "全系乾崑 ADS 5，四颗激光雷达，38 个传感器"], ["平台", "全系 800 伏"], ["底盘", "双腔闭式空气悬架、双阀减振，后轮转向 ±8°"], ["架构", "官方称按 L3 架构设计。这是架构口径，不是已经可以买到的 L3"]], "certainty": "已公开", "note": ""}, {"id": "ix3", "tier": "key", "name": "宝马 iX3", "brand": "宝马", "camp": "豪华", "action": "展前已上市", "power": ["纯电"], "body": "SUV", "priceMin": 26.99, "priceMax": 33.99, "price": "预售 26.99 万–33.99 万。11 月 25 日上市并交付", "size": "4885 × 1895 × 1635 mm，轴距 3005", "hall": "4.1 馆", "img": "images/ix3.jpg", "alt": "蓝色宝马 iX3 停在镜面地面上，背景是宝马总部大厦", "cap": "2025 年慕尼黑车展的新世代 iX3。照片：MB-one，CC BY-SA 4.0。", "lead": "不在 27 日首发。上市和交付都放在车展前两天，预售价还不是 25 日的最终指导价。和 i3 同一代电驱，但 i3 要到明年一季度才交车。", "specs": [["30L", "77 千瓦时，CLTC 630 公里"], ["40L xDrive", "86.9 千瓦时，CLTC 702 公里"], ["50L xDrive", "113.4 千瓦时，CLTC 919 公里"], ["平台", "800 伏，第六代 eDrive"]], "certainty": "已公开", "note": ""}, {"id": "v8", "tier": "key", "name": "享界 V8", "brand": "享界", "camp": "新势力", "action": "展前已上市", "power": ["增程"], "body": "MPV", "priceMin": 32.98, "priceMax": 44.98, "price": "预售 32.98 万–44.98 万。11 月 20 日 14:30 上市", "size": "车长 5335 mm，轴距 3250。宽高未核", "hall": "5.1 馆，北汽 / 享界", "lead": "本稿写的时候，上市发布会还没开，下面仍是预售价。它是鸿蒙智行价格最低的 MPV，尊界 V800 在 80 万级，智界 V9 是 38.98 万–51.98 万。纯电版有没有，预告没有单列。", "specs": [["空间", "后备厢 674 升"], ["转向", "全系后轮 ±12°，转弯半径 5.09 米"], ["续航", "增程综合 1465 公里"], ["智驾", "乾崑 ADS 5。Ultra 及以上四颗激光雷达，含 896 线"]], "note": "座椅是几座，等当天下午的配置表。预售稿说法不一致，这里不写死。", "certainty": "已公开", "img": "", "alt": "", "cap": ""}, {"id": "lafa5", "tier": "key", "name": "新款零跑 Lafa5", "brand": "零跑", "camp": "新势力", "action": "上市", "power": ["纯电"], "body": "轿车", "priceMin": null, "priceMax": null, "price": "新款价未官宣。现款 9.78 万–12.98 万", "size": "4430 × 1880 × 1520 mm，轴距 2735", "hall": "18.2 馆", "img": "images/lafa5.jpg", "alt": "黄色零跑 Lafa5 停在白色展台上，背景是车展的灯和观众", "cap": "2025 年慕尼黑车展的 Lafa 5。这次改款沿用这个外形。照片：MB-one，CC BY-SA 4.0。", "lead": "10 万级把 800 伏做进改款。续航预计 630、640、660 公里，这组还是预计，不是公告。中控加到 17.3 英寸，增加 AR-HUD。Ultra 版有 8 点按摩和方向盘加热。", "specs": [["现款电机", "Plus 180 马力，Pro / Max 218 马力，Ultra 245 马力"], ["新款电机", "有升级传闻，没有官宣"], ["平台", "800 伏"]], "certainty": "已公开", "note": ""}, {"id": "ex8", "tier": "key", "name": "林肯飞行家 EX8", "brand": "林肯", "camp": "豪华", "action": "首发", "power": ["插混"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "未公布。计划 2027 年上半年上市", "size": "5055 × 1995 × 1790 mm，另一高度 1800，轴距 3010", "hall": "3.2 馆", "lead": "五座中大型插混 SUV。现款飞行家计划继续卖到 2027 年年底，所以这台车首发和能买到之间还隔着半年以上。", "specs": [["发动机", "1.5T，型号 JL469ZQ1，重庆长安生产，净功率 105 千瓦"], ["车速", "最高 205 公里/小时"], ["电池", "磷酸铁锂，时代长安"], ["智驾", "激光雷达，高阶辅助驾驶。方案名称未写明"]], "certainty": "已公开", "note": "", "img": "", "alt": "", "cap": ""}, {"id": "t10", "tier": "key", "name": "212 T10", "brand": "212", "camp": "自主", "action": "上市", "power": ["燃油"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "未公布", "size": "4416 × 1955 × 1925 mm，轴距 2570", "hall": "1.1 馆", "lead": "三门四座。相对 T01 检阅官，车长短 289 毫米，轴距短 290 毫米，车宽多 60 毫米。蚌式机盖、圆灯、可拆软顶、侧开尾门、外挂备胎，保险杠可以装绞盘。", "specs": [["动力", "东安 2.0T，185 千瓦，最高时速 170 公里/小时"], ["四驱", "分时四驱和三把锁是参照 T01 的预计，不是 T10 已公布的配置表"], ["角度", "接近角 41°、离去角 32°，同样是参照，不是官宣"]], "note": "T01 的照片不是这台三门车，不放。", "certainty": "已公开", "img": "", "alt": "", "cap": ""}, {"id": "r700", "tier": "key", "name": "纵横 R700", "brand": "纵横", "camp": "自主", "action": "首发", "power": ["插混"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "未公布", "size": "未公布", "hall": "3.1 馆，捷途纵横", "lead": "方盒子中大型 SUV。封闭前脸，贯穿灯连着 C 形灯，车尾是八边形外挂储物盒。之前以概念车出现，这次按量产首发来报。动力整段都是参照 G700，不能写成 R700 的申报。", "specs": [["参照 G700", "2.0T 发动机 155 千瓦，电机合计 510 千瓦"], ["电池", "34.13 或 59.45 千瓦时"], ["续航", "CLTC 纯电 150 或 260 公里；综合 1400 或 1212 公里"], ["其他", "原地掉头和水中航行也写在这组参照里"]], "certainty": "已公开", "note": "", "img": "", "alt": "", "cap": ""}, {"id": "nautilus", "tier": "list", "name": "新款林肯航海家", "brand": "林肯", "camp": "豪华", "action": "首发", "power": ["燃油", "混动"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "未公布。已可预订，明年初交付，首批仍国产", "size": "未公布。轮圈 19–22 英寸", "hall": "3.2 馆", "lead": "改的是前脸：格栅加宽，大灯更细，尾部取消排气装饰。动力不变。", "specs": [["燃油", "2.0T，186 千瓦，379 牛·米"], ["混动", "系统 213 千瓦"], ["座舱", "48 英寸全景联屏。送 4 年互联和 4 年 BlueCruise 1.5"]], "certainty": "已公开", "note": "", "img": "", "alt": "", "cap": ""}, {"id": "mini", "tier": "list", "name": "全新 MINI COUNTRYMAN", "brand": "MINI", "camp": "豪华", "action": "首秀", "power": ["燃油"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "未公布", "size": "车长由 4310 mm 增至 4429 mm", "hall": "4.1 馆", "img": "images/mini.jpg", "alt": "白色 MINI Countryman 停在玻璃展厅外，黑色车顶", "cap": "欧洲现车。中国首秀的前脸以展车为准。照片：Alexander-93，CC BY-SA 4.0。", "lead": "中国首秀。悬浮车顶和竖置尾灯还在。另有多款特别版。", "specs": [["座舱", "9.44 英寸圆形 OLED，MINI OS 9，八种体验模式"], ["动力", "2.0T，244 马力，可选 All4"]], "certainty": "已公开", "note": ""}, {"id": "glc-a", "tier": "list", "name": "奔驰纯电 GLC 晖银版", "brand": "奔驰", "camp": "豪华", "action": "上市", "power": ["纯电"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "车展期间上市，售价未公布", "size": "未公布", "hall": "5.1 馆", "lead": "和星铂版一起在车展上市。Momenta R7 已经在纯电 GLC 上交付车位到车位。11 月 10 日日历里的 GLC 价格是另一批改款，不要套到这两台车上。", "certainty": "已公开", "specs": [], "note": "", "img": "", "alt": "", "cap": ""}, {"id": "glc-b", "tier": "list", "name": "奔驰纯电 GLC 星铂版", "brand": "奔驰", "camp": "豪华", "action": "上市", "power": ["纯电"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "车展期间上市，售价未公布", "size": "未公布。座椅 4+2", "hall": "5.1 馆", "lead": "相对晖银版，公开差别是 4+2 座。其余配置等上市稿。", "certainty": "已公开", "specs": [], "note": "", "img": "", "alt": "", "cap": ""}, {"id": "cla", "tier": "list", "name": "奔驰智混 CLA", "brand": "奔驰", "camp": "豪华", "action": "上市", "power": ["混动"], "body": "轿车", "priceMin": null, "priceMax": null, "price": "车展期间上市，售价未公布", "size": "未公布", "hall": "5.1 馆", "lead": "电气化混动。阵容稿写到 Momenta R7 和豆包。纯电 CLA 更早已经在卖，这台是混动版。", "certainty": "已公开", "specs": [], "note": "", "img": "", "alt": "", "cap": ""}, {"id": "g400", "tier": "list", "name": "奔驰 G 400", "brand": "奔驰", "camp": "豪华", "action": "上市", "power": ["燃油"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "车展期间上市，售价未公布", "size": "未公布", "hall": "5.1 馆", "lead": "车展首次亮相并上市，带新的越野组件。动力参数阵容稿没有写。", "certainty": "已公开", "specs": [], "note": "", "img": "", "alt": "", "cap": ""}, {"id": "bmw5", "tier": "list", "name": "宝马 5 系曜影限量版", "brand": "宝马", "camp": "豪华", "action": "展出", "power": ["未公布"], "body": "轿车", "priceMin": null, "priceMax": null, "price": "未公布", "size": "未公布", "hall": "4.1 馆", "lead": "限量版，和 i3、iX3 放在同一展台。没有单独的配置稿，不补参数。", "certainty": "已公开", "specs": [], "note": "", "img": "", "alt": "", "cap": ""}, {"id": "x5", "tier": "list", "name": "宝马 X5 xDrive 30Li 臻藏版", "brand": "宝马", "camp": "豪华", "action": "展出", "power": ["未公布"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "未公布", "size": "未公布", "hall": "4.1 馆", "lead": "特别版展出。名称里的 30Li 是现有燃料车序列，具体改了什么，参展稿没写。", "certainty": "已公开", "specs": [], "note": "", "img": "", "alt": "", "cap": ""}, {"id": "n8", "tier": "list", "name": "腾势 N8", "brand": "腾势", "camp": "自主", "action": "展前已上市", "power": ["纯电", "插混"], "body": "SUV", "priceMin": 26.99, "priceMax": 32.99, "price": "26.99 万–32.99 万，11 月 12 日上市", "size": "车长 5150 mm，轴距 3075。宽高未核", "hall": "2.1 馆", "lead": "大五座。纯电和插混共 6 款。易三方 Evo、第二代刀片和闪充、天神之眼 5.0、云辇-A。闪充“5 分钟充好、9 分钟充饱”是官方测试口径。", "specs": [["纯电", "CLTC 1003 公里"], ["插混", "CLTC 纯电 435 公里，综合 1567 公里"], ["装载", "前备厢 205 升，后备厢 1046 升，放倒后 2150 升"]], "certainty": "已公开", "note": "", "img": "", "alt": "", "cap": ""}, {"id": "lanshan", "tier": "list", "name": "魏牌二代蓝山", "brand": "魏牌", "camp": "自主", "action": "展出", "power": ["插混"], "body": "SUV", "priceMin": 28.98, "priceMax": 28.98, "price": "预售 28.98 万起，11 月 9 日开启", "size": "五座 5140 / 六座 5300 × 2050 × 1960 mm，轴距 3010", "hall": "4.1 馆，长城", "lead": "方盒子，五座和六座。价格筛选用的是预售门槛，不是全价格带。系统功率以官网的 510 千瓦为准，更早一篇预告写过 330 千瓦，那组作废。", "specs": [["动力", "2.0T 超级 Hi4，综合 510 千瓦、940 牛·米，满电 4.8 秒"], ["续航", "CLTC 纯电 350 公里，综合 1471 公里"], ["补能", "800 伏、6C，30%–80% 约 9 分钟"], ["转向", "后轮双向 20°。开启灵动转向，最小转弯半径 5.15 米"]], "certainty": "已公开", "note": "", "img": "", "alt": "", "cap": ""}, {"id": "xingyue", "tier": "list", "name": "吉利星越 L PLUS", "brand": "吉利", "camp": "自主", "action": "展出", "power": ["混动"], "body": "SUV", "priceMin": 16.77, "priceMax": 20.97, "price": "预售指导价 16.77 万–20.97 万", "size": "轴距 2900 mm。长宽高官网这页没给", "hall": "吉利展台", "lead": "11 月 12 日开启预售。1.83 千瓦时的电池是混动电池，不是长纯电插混。顶配才有 192 线激光雷达和 ±10° 后轮转向。吉利银河在 1.1 馆，星越是否跟银河同一馆，没有单独说明。", "specs": [["动力", "2.0TD + 3DHT"], ["空间", "官网写得房率 85.2%"], ["价格档", "揽晖悦尊 16.77 万到大师典藏 20.97 万"]], "certainty": "已公开", "note": "", "img": "", "alt": "", "cap": ""}, {"id": "su7", "tier": "list", "name": "小米 SU7", "brand": "小米", "camp": "新势力", "action": "展出", "power": ["纯电"], "body": "轿车", "priceMin": null, "priceMax": null, "price": "换代车 2026 年 3 月已上市。售价本稿未再核", "size": "未再核", "hall": "17.2 馆 17202", "img": "images/su7.jpg", "alt": "绿色小米 SU7 停在楼前空地，拍的是车尾和快背", "cap": "街拍，车尾标着 SU7 Max。若展车是 3 月换代后的车，细节可能不同。照片：JustAnotherCarDesigner，CC0。", "lead": "小米 11 月 19 日说的是全系展出，不是发布会。SU7、SU7 Ultra、YU7、YU7 GT 和澎程三台一起出现。", "certainty": "已公开", "specs": [], "note": ""}, {"id": "su7u", "tier": "list", "name": "小米 SU7 Ultra", "brand": "小米", "camp": "新势力", "action": "展出", "power": ["纯电"], "body": "轿车", "priceMin": null, "priceMax": null, "price": "已在售，本稿未再核", "size": "未再核", "hall": "17.2 馆 17202", "lead": "高性能版本，和 SU7 一起展出。没有新的车展专属配置。", "certainty": "已公开", "specs": [], "note": "", "img": "", "alt": "", "cap": ""}, {"id": "yu7", "tier": "list", "name": "小米 YU7", "brand": "小米", "camp": "新势力", "action": "展出", "power": ["纯电"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "已在售，本稿未再核", "size": "未再核", "hall": "17.2 馆 17202", "lead": "纯电 SUV。车展动作是展出，不是首发。", "certainty": "已公开", "specs": [], "note": "", "img": "", "alt": "", "cap": ""}, {"id": "yu7gt", "tier": "list", "name": "小米 YU7 GT", "brand": "小米", "camp": "新势力", "action": "展出", "power": ["纯电"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "已在售，本稿未再核", "size": "未再核", "hall": "17.2 馆 17202", "lead": "YU7 的高性能版本，同台展出。", "certainty": "已公开", "specs": [], "note": "", "img": "", "alt": "", "cap": ""}, {"id": "n70", "tier": "list", "name": "小米澎程 N70", "brand": "小米", "camp": "新势力", "action": "展出", "power": ["增程"], "body": "SUV", "priceMin": 20.99, "priceMax": 20.99, "price": "20.99 万起", "size": "中大型五座。长宽高未在这页写出", "hall": "17.2 馆 17202", "lead": "2+3 座增程 SUV。官网写二排标准腿部空间 1010 毫米，座椅后移后最多 1410 毫米；后备厢 1203 升。", "specs": [["入门", "210 千瓦，0–100 公里/小时 7.9 秒"], ["高功率", "310 千瓦，5.5 秒"], ["电池", "Pro 52 千瓦时磷酸铁锂；Max 76 千瓦时三元锂"]], "certainty": "已公开", "note": "", "img": "", "alt": "", "cap": ""}, {"id": "n90", "tier": "list", "name": "小米澎程 N90", "brand": "小米", "camp": "新势力", "action": "展出", "power": ["增程"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "未在参展稿里写出", "size": "大型七座。尺寸未核", "hall": "17.2 馆 17202", "lead": "大型增程 SUV，大七座。和 N70 一起代表小米的增程线。", "certainty": "已公开", "specs": [], "note": "", "img": "", "alt": "", "cap": ""}, {"id": "n90x", "tier": "list", "name": "小米澎程 N90 探索版", "brand": "小米", "camp": "新势力", "action": "展出", "power": ["增程"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "未在参展稿里写出", "size": "未核", "hall": "17.2 馆 17202", "lead": "在 N90 上加电动升降顶舱，给露营和装载用。", "certainty": "已公开", "specs": [], "note": "", "img": "", "alt": "", "cap": ""}, {"id": "h9", "tier": "list", "name": "红旗 H9 PHEV", "brand": "红旗", "camp": "自主", "action": "上市", "power": ["插混"], "body": "轿车", "priceMin": null, "priceMax": null, "price": "未公布", "size": "未公布", "hall": "19.2 馆", "lead": "新浪新车日历把它放在 11 月 27 日。和媒体日是同一天，但红旗没有单独说这是车展发布。参数先空着。", "certainty": "未确认", "specs": [], "note": "", "img": "", "alt": "", "cap": ""}, {"id": "avancier", "tier": "concept", "name": "本田冠道原型车", "brand": "本田", "camp": "合资", "action": "概念", "power": ["混动"], "body": "SUV", "priceMin": null, "priceMax": null, "price": "未公布", "size": "未公布", "hall": "2.2 馆，未确认", "lead": "汽车之家的原话是“有望首发，官方尚未确认”。预告图是更方正的混动造型，可能同时展示第五代 i-MMD。供应商网上有人把它写成已确认，和汽车之家冲突。这里按未确认处理。", "certainty": "未确认", "note": "新原型车没有可核对的照片。旧款冠道不能当这台车。", "specs": [], "img": "", "alt": "", "cap": ""}]</script>
+<script>
+const CARS = JSON.parse(document.getElementById("data").textContent);
+const BANDS = { u15:[0,15], m30:[15,30], m50:[30,50], m100:[50,100], top:[100,10000] };
+const $ = (id) => document.getElementById(id);
+
+function hitPrice(car, band) {
+  if (band === "all") return true;
+  if (car.priceMin == null) return band === "na";
+  if (band === "na") return false;
+  const [a, b] = BANDS[band];
+  const lo = car.priceMin;
+  const hi = car.priceMax == null ? lo : car.priceMax;
+  if (car.priceMax == null) return lo >= a && lo < b;
+  return hi > a && lo < b;
+}
+
+function match(car) {
+  const q = $("q").value.trim().toLowerCase();
+  if (q) {
+    const blob = [car.name, car.brand, car.lead, car.size, car.price, car.hall, car.note, ...(car.specs||[]).flat()].join(" ").toLowerCase();
+    if (!blob.includes(q)) return false;
+  }
+  const tier = $("f-tier").value;
+  if (tier !== "all" && car.tier !== tier) return false;
+  const action = $("f-action").value;
+  if (action !== "all" && car.action !== action) return false;
+  const power = $("f-power").value;
+  if (power !== "all" && !car.power.includes(power)) return false;
+  const body = $("f-body").value;
+  if (body !== "all" && car.body !== body) return false;
+  const camp = $("f-camp").value;
+  if (camp !== "all" && car.camp !== camp) return false;
+  if (!hitPrice(car, $("f-price").value)) return false;
+  return true;
+}
+
+function visual(car, big) {
+  const wrap = document.createElement("div");
+  wrap.className = "visual";
+  if (car.img) {
+    const fig = document.createElement("figure");
+    const img = document.createElement("img");
+    img.src = car.img;
+    img.alt = car.alt || car.name;
+    img.addEventListener("error", () => fig.replaceWith(plate(car)));
+    fig.appendChild(img);
+    if (car.cap) {
+      const cap = document.createElement("figcaption");
+      cap.textContent = car.cap;
+      fig.appendChild(cap);
+    }
+    wrap.appendChild(fig);
+  } else {
+    wrap.appendChild(plate(car));
+  }
+  return wrap;
+}
+
+function plate(car) {
+  const div = document.createElement("div");
+  div.className = "plate";
+  const s = document.createElement("span");
+  s.textContent = car.brand;
+  const b = document.createElement("strong");
+  b.textContent = car.name;
+  div.append(s, b);
+  return div;
+}
+
+function card(car, index, tier) {
+  const art = document.createElement("article");
+  art.className = tier === "list" ? "row" : "feature" + (index % 2 ? " flip" : "");
+  const copy = document.createElement("div");
+  const eye = document.createElement("p");
+  eye.className = "eyebrow";
+  const bits = [car.action, car.certainty === "未确认" ? "未确认" : car.camp, car.power.join(" / "), car.hall];
+  eye.textContent = bits.filter(Boolean).join("  ·  ");
+  const h = document.createElement("h3");
+  h.textContent = car.name;
+  const fine = document.createElement("p");
+  fine.className = "fine";
+  fine.textContent = car.size + "  ·  " + car.price;
+  const lead = document.createElement("p");
+  lead.className = "lead";
+  lead.textContent = car.lead;
+  copy.append(eye, h, fine, lead);
+  if (car.note) {
+    const n = document.createElement("p");
+    n.className = "warn";
+    n.textContent = car.note;
+    copy.appendChild(n);
+  }
+  if (tier !== "list" && car.specs && car.specs.length) {
+    const dl = document.createElement("dl");
+    car.specs.forEach(([k, v]) => {
+      const dt = document.createElement("dt");
+      dt.textContent = k;
+      const dd = document.createElement("dd");
+      dd.textContent = v;
+      dl.append(dt, dd);
+    });
+    copy.appendChild(dl);
+  }
+  const vis = visual(car);
+  if (tier === "list") art.append(vis, copy);
+  else art.append(vis, copy);
+  return art;
+}
+
+function render() {
+  const shown = CARS.filter(match);
+  $("count").textContent = "显示 " + shown.length + " / " + CARS.length;
+  let any = false;
+  [["key","key-list"],["list","list-list"],["concept","concept-list"]].forEach(([tier, id]) => {
+    const items = shown.filter(c => c.tier === tier);
+    const section = $(tier);
+    section.hidden = items.length === 0;
+    const box = $(id);
+    box.replaceChildren();
+    items.forEach((car, i) => box.appendChild(card(car, i, tier)));
+    if (items.length) any = true;
+  });
+  $("none").style.display = any ? "none" : "block";
+}
+
+["q","f-tier","f-action","f-power","f-body","f-price","f-camp"].forEach(id => {
+  $(id).addEventListener("input", render);
+  $(id).addEventListener("change", render);
+});
+$("reset").addEventListener("click", () => {
+  $("q").value = "";
+  ["f-tier","f-action","f-power","f-body","f-price","f-camp"].forEach(id => $(id).value = "all");
+  render();
+});
+render();
+</script>
+</body>
+</html>
